@@ -1,0 +1,11 @@
+#define UNDEFINED -1
+#define FALSE 0
+#define TRUE 1
+
+#define WINDOW_SIZE 800
+
+#define FPS 60
+#define FRAME_TARGET (1000/FPS)
+
+#define BOARD_SIZE 50
+#define PIXEL_SIZE (WINDOW_SIZE/BOARD_SIZE)
