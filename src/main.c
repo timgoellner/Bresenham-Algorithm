@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <SDL3/SDL.h>
 #include "constants.h"
-#include "line.c"
+#include "bresenham.c"
 
 int running;
 int last_frame;
 SDL_Window *window;
 SDL_Renderer *renderer;
+
+int mode;
 
 SDL_FRect pixels[BOARD_SIZE][BOARD_SIZE];
 int pixel_info[BOARD_SIZE][BOARD_SIZE];
@@ -61,6 +63,10 @@ void process_input() {
             break;
         case SDL_EVENT_KEY_DOWN:
             if (event.key.keysym.sym == SDLK_ESCAPE || event.key.keysym.sym == SDLK_q) running = FALSE;
+            if (event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_KP_ENTER) {
+                mode = !mode;
+                reset = TRUE;
+            }
             break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
             if (event.button.button == SDL_BUTTON_LEFT) {
@@ -88,6 +94,8 @@ void update() {
         mouse_pos[0] = UNDEFINED;
         mouse_pos[1] = UNDEFINED;
 
+        active_point = FALSE;
+
         reset = FALSE;
     }
 
@@ -107,7 +115,10 @@ void update() {
         }
     }
 
-    if (points[0][0] != UNDEFINED && points[1][0] != UNDEFINED) generate_line(pixel_info, points);
+    if (points[0][0] != UNDEFINED && points[1][0] != UNDEFINED) {
+        if (mode) generate_line(pixel_info, points);
+        else generate_circle(pixel_info, points);
+    }
 }
 
 void render() {
