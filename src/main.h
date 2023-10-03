@@ -1,7 +1,9 @@
 #ifndef MAIN
 #define MAIN
 
+#include <stdio.h>
 #include <SDL3/SDL.h>
+#include "bresenham.c"
 #include "constants.h"
 
 

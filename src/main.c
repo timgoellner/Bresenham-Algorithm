@@ -1,6 +1,4 @@
-#include <stdio.h>
 #include "main.h"
-#include "bresenham.c"
 
 
 int initialize_window() {

@@ -1,6 +1,7 @@
 #ifndef BRESENHAM
 #define BRESENHAM
 
+#include <math.h>
 #include "constants.h"
 
 
