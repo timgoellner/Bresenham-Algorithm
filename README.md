@@ -11,6 +11,6 @@ The Rasterization of lines, circles, triangles and squares with the the Bresenha
 Note: You can alter some settings in `src/constants.h` if you rebuild the project
 
 - Switch between line, circle, triangle and square drawing mode with `SPACE` or `ENTER` 
-- Draw shapes with setting two points using `LMB`
+- Draw shapes with setting two or three points using `LMB`
 - Clear the screen and reset the points with `RMB`
 - Exit with `ESC`, `q` or `Alt+F4`

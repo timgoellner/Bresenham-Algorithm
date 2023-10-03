@@ -1,6 +1,5 @@
 #include <math.h>
-#include "constants.h"
-#include "stdio.h"
+#include "bresenham.h"
 
 
 void generate_line(int (*pixel_info)[BOARD_SIZE], int (*points)[2]) {
