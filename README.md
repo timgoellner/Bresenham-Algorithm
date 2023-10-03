@@ -5,7 +5,7 @@ The Rasterization of lines and circles with the the Bresenham Algorithm
 1. Clone the repository
 2. (Optional and requiers SDL to be installed and correctly linked) Build the project yourself with `make`
    (`gcc -Isrc/include -Lsrc/lib -o bin/Bresenham src/main.c -lmingw32 -lSDL3`)
-3. Start `bin/Bresenham.exe`
+3. Start `bin/Bresenham.exe` (problems may occur when not using powershell to start)
 
 ## Usage
 Note: You can alter some settings in `src/constants.h` if you rebuild the project
