@@ -92,3 +92,29 @@ void generate_triangle(int (*pixel_info)[BOARD_SIZE], int (*points)[2]) {
     generate_line(pixel_info, (int[2][2]){ { points[0][0], points[0][1] }, { points[2][0], points[2][1] } });
     generate_line(pixel_info, (int[2][2]){ { points[1][0], points[1][1] }, { points[2][0], points[2][1] } });
 }
+
+
+void generate_square(int (*pixel_info)[BOARD_SIZE], int (*points)[2]) {
+    int distances[2][2];
+
+    for (int i=0; i<2; i++) {
+        for (int j=0; j<2; j++) {
+            distances[i][j] = points[2][j] - points[i][j];
+        }
+    }
+
+    int distance[2] = { sqrt(pow(distances[0][0], 2) + pow(distances[0][1], 2)), sqrt(pow(distances[1][0], 2) + pow(distances[1][1], 2)) };
+
+    int lowest_distance_point = 0;
+    if (distance[1] < distance[0]) lowest_distance_point = 1;
+
+    int next_point[2] = {
+        points[!lowest_distance_point][0] + distances[lowest_distance_point][0],
+        points[!lowest_distance_point][1] + distances[lowest_distance_point][1]
+    };
+
+    generate_line(pixel_info, (int[2][2]){ { points[0][0], points[0][1] }, { points[1][0], points[1][1] } });
+    generate_line(pixel_info, (int[2][2]){ { points[2][0], points[2][1] }, { points[lowest_distance_point][0], points[lowest_distance_point][1] } });
+    generate_line(pixel_info, (int[2][2]){ { points[!lowest_distance_point][0], points[!lowest_distance_point][1] }, { next_point[0], next_point[1] } });
+    generate_line(pixel_info, (int[2][2]){ { points[2][0], points[2][1] }, { next_point[0], next_point[1] } });
+}

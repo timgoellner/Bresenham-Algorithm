@@ -13,6 +13,7 @@ SDL_Renderer *renderer;
     0 -> Line
     1 -> Circle
     2 -> Triangle
+    3 -> Square
 */
 int mode;
 
@@ -126,6 +127,7 @@ void update() {
         int passed = FALSE;
         if (points[2][0] != UNDEFINED) {
             if (mode == 2) generate_triangle(pixel_info, points);
+            if (mode == 3) generate_square(pixel_info, points);
 
             passed = TRUE;
         }
