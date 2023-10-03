@@ -3,11 +3,17 @@
 #include "constants.h"
 #include "bresenham.c"
 
+
 int running;
 int last_frame;
 SDL_Window *window;
 SDL_Renderer *renderer;
 
+/*
+    0 -> Line
+    1 -> Circle
+    2 -> Triangle
+*/
 int mode;
 
 SDL_FRect pixels[BOARD_SIZE][BOARD_SIZE];
@@ -18,24 +24,24 @@ int reset;
 int mouse_pos[2];
 
 int active_point;
-int points[2][2] = { { UNDEFINED, UNDEFINED }, { UNDEFINED, UNDEFINED } };
+int points[3][2] = { { UNDEFINED, UNDEFINED }, { UNDEFINED, UNDEFINED }, { UNDEFINED, UNDEFINED } };
 
 
 int initialize_window() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-        fprintf(stderr, "Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
+        fprintf(stderr, "[Error] SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
         return FALSE;
     }
 
     window = SDL_CreateWindow("Line Algorythm", WINDOW_SIZE, WINDOW_SIZE, SDL_WINDOW_BORDERLESS);
     if (!window) {
-        fprintf(stderr, "Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
+        fprintf(stderr, "[Error] Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
         return FALSE;
     }
 
     renderer = SDL_CreateRenderer(window, NULL, 0);
-    if(!renderer){
-        printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
+    if (!renderer){
+        fprintf(stderr, "[Error] Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
         return FALSE;
     }
 
@@ -64,8 +70,8 @@ void process_input() {
         case SDL_EVENT_KEY_DOWN:
             if (event.key.keysym.sym == SDLK_ESCAPE || event.key.keysym.sym == SDLK_q) running = FALSE;
             if (event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_KP_ENTER) {
-                mode = !mode;
-                reset = TRUE;
+                mode = mode >= 3 ? 0 : mode+1;
+                printf("[Info] Mode changed to %i\n", mode);
             }
             break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
@@ -88,7 +94,7 @@ void update() {
     last_frame = SDL_GetTicks();
 
     if (reset) {
-        for (int i=0; i<2; i++) { for (int j=0; j<2; j++) { points[i][j] = UNDEFINED; } }
+        for (int i=0; i<3; i++) { for (int j=0; j<3; j++) { points[i][j] = UNDEFINED; } }
         for (int i=0; i<BOARD_SIZE; i++) { for (int j=0; j<BOARD_SIZE; j++) { pixel_info[i][j] = FALSE; }}
 
         mouse_pos[0] = UNDEFINED;
@@ -106,18 +112,25 @@ void update() {
     points[active_point][0] = mouse_pos[0];
     points[active_point][1] = mouse_pos[1];
 
-    active_point = !active_point;
+    if (mode < 2) active_point = !active_point;
+    else active_point = active_point >= 2 ? 0 : active_point+1;
 
-    for (int i=0; i<BOARD_SIZE; i++) {
-        for (int j=0; j<BOARD_SIZE; j++) {
-            if ((points[0][0] == i && points[0][1] == j) || (points[1][0] == i && points[1][1] == j)) pixel_info[i][j] = TRUE;
-            else pixel_info[i][j] = FALSE;
-        }
+    for (int i=0; i<3; i++) {
+        if (points[i][0] != UNDEFINED && points[i][1] != UNDEFINED) pixel_info[points[i][0]][points[i][1]] = TRUE;
     }
 
     if (points[0][0] != UNDEFINED && points[1][0] != UNDEFINED) {
-        if (mode) generate_line(pixel_info, points);
-        else generate_circle(pixel_info, points);
+        if (mode == 0) generate_line(pixel_info, points);
+        else if (mode == 1) generate_circle(pixel_info, points);
+
+        int passed = FALSE;
+        if (points[2][0] != UNDEFINED) {
+            if (mode == 2) generate_triangle(pixel_info, points);
+
+            passed = TRUE;
+        }
+
+        if (mode < 2 || passed) for (int i=0; i<3; i++) { for (int j=0; j<3; j++) { points[i][j] = UNDEFINED; } }
     }
 }
 

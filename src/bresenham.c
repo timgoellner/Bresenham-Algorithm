@@ -2,46 +2,6 @@
 #include "constants.h"
 #include "stdio.h"
 
-void fill_symmetric_circle(int (*pixel_info)[BOARD_SIZE], int location[2], int origin[2]) {
-    int tests[8] = { location[0]+origin[0], -location[0]+origin[0], location[1]+origin[0], -location[1]+origin[0], location[1]+origin[1], -location[1]+origin[1], location[0]+origin[1], -location[0]+origin[1] };
-
-    for (int i=0; i<8; i++) {
-        if (tests[i] < 0 || tests[i] >= BOARD_SIZE) tests[i] = UNDEFINED;
-    }
-
-    if (tests[0] != UNDEFINED && tests[4] != UNDEFINED) pixel_info[tests[0]][tests[4]] = TRUE;
-    if (tests[0] != UNDEFINED && tests[5] != UNDEFINED) pixel_info[tests[0]][tests[5]] = TRUE;
-    if (tests[1] != UNDEFINED && tests[5] != UNDEFINED) pixel_info[tests[1]][tests[5]] = TRUE;
-    if (tests[1] != UNDEFINED && tests[4] != UNDEFINED) pixel_info[tests[1]][tests[4]] = TRUE;
-    if (tests[2] != UNDEFINED && tests[6] != UNDEFINED) pixel_info[tests[2]][tests[6]] = TRUE;
-    if (tests[2] != UNDEFINED && tests[7] != UNDEFINED) pixel_info[tests[2]][tests[7]] = TRUE;
-    if (tests[3] != UNDEFINED && tests[7] != UNDEFINED) pixel_info[tests[3]][tests[7]] = TRUE;
-    if (tests[3] != UNDEFINED && tests[6] != UNDEFINED) pixel_info[tests[3]][tests[6]] = TRUE;
-}
-
-void generate_circle(int (*pixel_info)[BOARD_SIZE], int (*points)[2]) {
-    pixel_info[points[1][0]][points[1][1]] = FALSE;
-    
-    int distance[2] = { points[1][0] - points[0][0], points[1][1] - points[0][1] };
-    int radius = (int) sqrt(pow(distance[0], 2) + pow(distance[1], 2));
-
-    int location[2] = { 0, radius };
-    int error = 3-(2*radius);
-
-    int origin[2] = { points[0][0], points[0][1] };
-    fill_symmetric_circle(pixel_info, location, origin);
-
-    while (location[0] <= location[1]) {
-        if (error <= 0) { error += (4*location[0])+6; }
-        else {
-            error += (4*location[0])-(4*location[1])+10;
-            location[1]--;
-        }
-
-        location[0]++;
-        fill_symmetric_circle(pixel_info, location, origin);
-    }
-}
 
 void generate_line(int (*pixel_info)[BOARD_SIZE], int (*points)[2]) {
     int swap = points[0][0] > points[1][0];
@@ -81,4 +41,54 @@ void generate_line(int (*pixel_info)[BOARD_SIZE], int (*points)[2]) {
         pixel_info[location[0]][location[1]] = TRUE;
     }
     
+}
+
+
+void fill_symmetric_circle(int (*pixel_info)[BOARD_SIZE], int location[2], int origin[2]) {
+    int tests[8] = { location[0]+origin[0], -location[0]+origin[0], location[1]+origin[0], -location[1]+origin[0], location[1]+origin[1], -location[1]+origin[1], location[0]+origin[1], -location[0]+origin[1] };
+
+    for (int i=0; i<8; i++) {
+        if (tests[i] < 0 || tests[i] >= BOARD_SIZE) tests[i] = UNDEFINED;
+    }
+
+    if (tests[0] != UNDEFINED && tests[4] != UNDEFINED) pixel_info[tests[0]][tests[4]] = TRUE;
+    if (tests[0] != UNDEFINED && tests[5] != UNDEFINED) pixel_info[tests[0]][tests[5]] = TRUE;
+    if (tests[1] != UNDEFINED && tests[5] != UNDEFINED) pixel_info[tests[1]][tests[5]] = TRUE;
+    if (tests[1] != UNDEFINED && tests[4] != UNDEFINED) pixel_info[tests[1]][tests[4]] = TRUE;
+    if (tests[2] != UNDEFINED && tests[6] != UNDEFINED) pixel_info[tests[2]][tests[6]] = TRUE;
+    if (tests[2] != UNDEFINED && tests[7] != UNDEFINED) pixel_info[tests[2]][tests[7]] = TRUE;
+    if (tests[3] != UNDEFINED && tests[7] != UNDEFINED) pixel_info[tests[3]][tests[7]] = TRUE;
+    if (tests[3] != UNDEFINED && tests[6] != UNDEFINED) pixel_info[tests[3]][tests[6]] = TRUE;
+}
+
+void generate_circle(int (*pixel_info)[BOARD_SIZE], int (*points)[2]) {
+    pixel_info[points[1][0]][points[1][1]] = FALSE;
+    pixel_info[points[0][0]][points[0][1]] = FALSE;
+    
+    int distance[2] = { points[1][0] - points[0][0], points[1][1] - points[0][1] };
+    int radius = (int) sqrt(pow(distance[0], 2) + pow(distance[1], 2));
+
+    int location[2] = { 0, radius };
+    int error = 3-(2*radius);
+
+    int origin[2] = { points[0][0], points[0][1] };
+    fill_symmetric_circle(pixel_info, location, origin);
+
+    while (location[0] <= location[1]) {
+        if (error <= 0) { error += (4*location[0])+6; }
+        else {
+            error += (4*location[0])-(4*location[1])+10;
+            location[1]--;
+        }
+
+        location[0]++;
+        fill_symmetric_circle(pixel_info, location, origin);
+    }
+}
+
+
+void generate_triangle(int (*pixel_info)[BOARD_SIZE], int (*points)[2]) {
+    generate_line(pixel_info, (int[2][2]){ { points[0][0], points[0][1] }, { points[1][0], points[1][1] } });
+    generate_line(pixel_info, (int[2][2]){ { points[0][0], points[0][1] }, { points[2][0], points[2][1] } });
+    generate_line(pixel_info, (int[2][2]){ { points[1][0], points[1][1] }, { points[2][0], points[2][1] } });
 }
