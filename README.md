@@ -1,5 +1,5 @@
 # Bresenham-Algorithm
-The Rasterization of lines and circles with the the Bresenham Algorithm
+The Rasterization of lines, circles and triangles with the the Bresenham Algorithm
 
 ## Installation
 1. Clone the repository
@@ -10,7 +10,7 @@ The Rasterization of lines and circles with the the Bresenham Algorithm
 ## Usage
 Note: You can alter some settings in `src/constants.h` if you rebuild the project
 
-- Switch between circle and line drawing mode with `SPACE` or `ENTER` 
+- Switch between line, circle and triangle drawing mode with `SPACE` or `ENTER` 
 - Draw shapes with setting two points using `LMB`
 - Clear the screen and reset the points with `RMB`
 - Exit with `ESC`, `q` or `Alt+F4`
