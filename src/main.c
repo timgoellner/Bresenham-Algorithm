@@ -43,7 +43,7 @@ void process_input() {
             break;
         case SDL_EVENT_KEY_DOWN:
             if (event.key.keysym.sym == SDLK_ESCAPE || event.key.keysym.sym == SDLK_q) running = FALSE;
-            if (event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_KP_ENTER) {
+            if (event.key.keysym.sym == SDLK_SPACE) {
                 for (int i=0; i<3; i++) {
                     if (points[i][0] != UNDEFINED) pixel_info[points[i][0]][points[i][1]] = FALSE;
                     for (int j=0; j<2; j++) { points[i][j] = UNDEFINED; }
